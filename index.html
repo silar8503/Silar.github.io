@@ -1,0 +1,1943 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>宏易采购积分管理系统</title>
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2980b9;
+            --success-color: #2ecc71;
+            --danger-color: #e74c3c;
+            --warning-color: #f39c12;
+            --light-color: #ecf0f1;
+            --dark-color: #34495e;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 20px 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            border-radius: 8px;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        h1 {
+            font-size: 24px;
+        }
+        
+        .login-section {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        input[type="password"], input[type="text"], input[type="number"], select {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        
+        button {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--secondary-color);
+        }
+        
+        .btn-success {
+            background-color: var(--success-color);
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background-color: #27ae60;
+        }
+        
+        .btn-danger {
+            background-color: var(--danger-color);
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background-color: #c0392b;
+        }
+        
+        .btn-warning {
+            background-color: var(--warning-color);
+            color: white;
+        }
+        
+        .btn-warning:hover {
+            background-color: #e67e22;
+        }
+        
+        .tabs {
+            display: flex;
+            background-color: white;
+            border-radius: 8px 8px 0 0;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .tab {
+            padding: 12px 20px;
+            cursor: pointer;
+            background-color: #f8f9fa;
+            border-right: 1px solid #e9ecef;
+            transition: background-color 0.3s;
+        }
+        
+        .tab:hover {
+            background-color: #e9ecef;
+        }
+        
+        .tab.active {
+            background-color: white;
+            border-bottom: 3px solid var(--primary-color);
+            font-weight: bold;
+        }
+        
+        .tab-content {
+            display: none;
+            background-color: white;
+            padding: 20px;
+            border-radius: 0 0 8px 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            min-height: 500px;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        
+        th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+        }
+        
+        tr:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 5px;
+        }
+        
+        .action-btn {
+            padding: 4px 8px;
+            font-size: 12px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            color: #999;
+        }
+        
+        .alert {
+            padding: 10px 15px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+        }
+        
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .alert-danger {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        .badge-success {
+            background-color: var(--success-color);
+            color: white;
+        }
+        
+        .badge-danger {
+            background-color: var(--danger-color);
+            color: white;
+        }
+        
+        .badge-warning {
+            background-color: var(--warning-color);
+            color: white;
+        }
+        
+        .badge-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .view-only {
+            background-color: #f8f9fa;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            text-align: center;
+            color: #6c757d;
+        }
+        
+        .filter-section {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .filter-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .ranking-controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .period-info {
+            background-color: #e8f4fd;
+            padding: 10px 15px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            font-weight: 500;
+        }
+        
+        @media (max-width: 768px) {
+            .tabs {
+                flex-wrap: wrap;
+            }
+            
+            .tab {
+                flex: 1 0 50%;
+            }
+            
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+            
+            table {
+                font-size: 14px;
+            }
+            
+            th, td {
+                padding: 8px 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <h1>宏易采购积分管理系统</h1>
+                <div class="login-section">
+                    <input type="password" id="adminPassword" placeholder="管理员密码(留空进入查看模式)">
+                    <button id="loginBtn" class="btn-primary">登录</button>
+                    <button id="viewModeBtn" class="btn-success">查看模式</button>
+                    <span id="loginStatus">未登录</span>
+                </div>
+            </div>
+        </header>
+        
+        <div class="tabs">
+            <div class="tab active" data-tab="employees">员工管理</div>
+            <div class="tab" data-tab="rules">积分规则</div>
+            <div class="tab" data-tab="rewards">奖品管理</div>
+            <div class="tab" data-tab="ranking">排行榜</div>
+            <div class="tab" data-tab="batch">批量操作</div>
+            <div class="tab" data-tab="records">积分记录</div>
+        </div>
+        
+        <!-- 员工管理 -->
+        <div class="tab-content active" id="employees-tab">
+            <div class="section-header">
+                <h2>员工管理</h2>
+                <div>
+                    <button id="addEmployeeBtn" class="btn-primary">添加员工</button>
+                    <button id="deleteEmployeeBtn" class="btn-danger">删除员工</button>
+                </div>
+            </div>
+            
+            <div id="viewOnlyAlert" class="view-only" style="display: none;">
+                当前处于查看模式，无法修改数据
+            </div>
+            
+            <table id="employeesTable">
+                <thead>
+                    <tr>
+                        <th><input type="checkbox" id="selectAllEmployees"> 全选</th>
+                        <th>姓名</th>
+                        <th>积分</th>
+                        <th>兑换币</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody id="employeesList">
+                    <!-- 员工数据将通过JavaScript动态加载 -->
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- 积分规则 -->
+        <div class="tab-content" id="rules-tab">
+            <div class="section-header">
+                <h2>积分规则</h2>
+                <div>
+                    <button id="addRuleBtn" class="btn-primary">添加规则</button>
+                    <button id="deleteRuleBtn" class="btn-danger">删除规则</button>
+                </div>
+            </div>
+            
+            <table id="rulesTable">
+                <thead>
+                    <tr>
+                        <th><input type="checkbox" id="selectAllRules"> 全选</th>
+                        <th>规则描述</th>
+                        <th>积分</th>
+                    </tr>
+                </thead>
+                <tbody id="rulesList">
+                    <!-- 规则数据将通过JavaScript动态加载 -->
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- 奖品管理 -->
+        <div class="tab-content" id="rewards-tab">
+            <div class="section-header">
+                <h2>奖品管理</h2>
+                <div>
+                    <button id="addRewardBtn" class="btn-primary">添加奖品</button>
+                    <button id="deleteRewardBtn" class="btn-danger">删除奖品</button>
+                </div>
+            </div>
+            
+            <table id="rewardsTable">
+                <thead>
+                    <tr>
+                        <th><input type="checkbox" id="selectAllRewards"> 全选</th>
+                        <th>奖品名称</th>
+                        <th>所需兑换币</th>
+                    </tr>
+                </thead>
+                <tbody id="rewardsList">
+                    <!-- 奖品数据将通过JavaScript动态加载 -->
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- 排行榜 -->
+        <div class="tab-content" id="ranking-tab">
+            <div class="section-header">
+                <h2>积分排行榜</h2>
+            </div>
+            
+            <div class="ranking-controls">
+                <div>
+                    <label>排序依据:</label>
+                    <select id="rankingType">
+                        <option value="points">积分</option>
+                        <option value="coins">兑换币</option>
+                    </select>
+                </div>
+                
+                <div>
+                    <label>时间范围:</label>
+                    <select id="rankingPeriod">
+                        <option value="all">全部时间</option>
+                        <option value="month">本月</option>
+                        <option value="quarter">本季度</option>
+                        <option value="custom">自定义</option>
+                    </select>
+                </div>
+                
+                <div id="monthSelection" style="display: none;">
+                    <label>月份:</label>
+                    <select id="rankingMonth">
+                        <!-- 月份选项将通过JavaScript动态加载 -->
+                    </select>
+                </div>
+                
+                <div id="quarterSelection" style="display: none;">
+                    <label>季度:</label>
+                    <select id="rankingQuarter">
+                        <option value="1">第一季度</option>
+                        <option value="2">第二季度</option>
+                        <option value="3">第三季度</option>
+                        <option value="4">第四季度</option>
+                    </select>
+                </div>
+                
+                <div id="yearSelection" style="display: none;">
+                    <label>年份:</label>
+                    <select id="rankingYear">
+                        <!-- 年份选项将通过JavaScript动态加载 -->
+                    </select>
+                </div>
+                
+                <div id="customDateSelection" style="display: none;">
+                    <label>开始日期:</label>
+                    <input type="date" id="rankingStartDate">
+                    <label>结束日期:</label>
+                    <input type="date" id="rankingEndDate">
+                </div>
+            </div>
+            
+            <div id="periodInfo" class="period-info">
+                <!-- 时间段信息将通过JavaScript动态加载 -->
+            </div>
+            
+            <table id="rankingTable">
+                <thead>
+                    <tr>
+                        <th>排名</th>
+                        <th>姓名</th>
+                        <th>积分</th>
+                        <th>兑换币</th>
+                    </tr>
+                </thead>
+                <tbody id="rankingList">
+                    <!-- 排行榜数据将通过JavaScript动态加载 -->
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- 批量操作 -->
+        <div class="tab-content" id="batch-tab">
+            <div class="section-header">
+                <h2>批量操作</h2>
+            </div>
+            
+            <div class="form-group">
+                <label>选择员工:</label>
+                <div id="batchEmployeeList" style="max-height: 200px; overflow-y: auto; border: 1px solid #ddd; padding: 10px; border-radius: 4px;">
+                    <!-- 员工多选框将通过JavaScript动态加载 -->
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>操作类型:</label>
+                <select id="batchOperationType">
+                    <option value="add">加分</option>
+                    <option value="subtract">减分</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label>积分值:</label>
+                <input type="number" id="batchPoints" min="1" value="10">
+            </div>
+            
+            <div class="form-group">
+                <label>原因:</label>
+                <input type="text" id="batchReason" placeholder="请输入操作原因">
+            </div>
+            
+            <button id="executeBatchBtn" class="btn-primary">执行批量操作</button>
+        </div>
+        
+        <!-- 积分记录 -->
+        <div class="tab-content" id="records-tab">
+            <div class="section-header">
+                <h2>积分记录</h2>
+            </div>
+            
+            <div class="filter-section">
+                <div class="filter-item">
+                    <label>员工:</label>
+                    <select id="recordEmployeeFilter">
+                        <option value="">全部员工</option>
+                        <!-- 员工选项将通过JavaScript动态加载 -->
+                    </select>
+                </div>
+                
+                <div class="filter-item">
+                    <label>类型:</label>
+                    <select id="recordTypeFilter">
+                        <option value="">全部类型</option>
+                        <option value="add">加分</option>
+                        <option value="subtract">减分</option>
+                        <option value="exchange">兑换</option>
+                    </select>
+                </div>
+                
+                <div class="filter-item">
+                    <label>时间范围:</label>
+                    <select id="recordTimeFilter">
+                        <option value="all">全部时间</option>
+                        <option value="today">今天</option>
+                        <option value="week">最近一周</option>
+                        <option value="month">最近一月</option>
+                        <option value="quarter">最近一季度</option>
+                        <option value="year">今年</option>
+                        <option value="custom">自定义</option>
+                    </select>
+                </div>
+                
+                <div class="filter-item" id="recordCustomDate" style="display: none;">
+                    <label>开始日期:</label>
+                    <input type="date" id="recordStartDate">
+                    <label>结束日期:</label>
+                    <input type="date" id="recordEndDate">
+                </div>
+            </div>
+            
+            <div id="recordPeriodInfo" class="period-info">
+                <!-- 记录时间段信息将通过JavaScript动态加载 -->
+            </div>
+            
+            <table id="recordsTable">
+                <thead>
+                    <tr>
+                        <th>时间</th>
+                        <th>员工</th>
+                        <th>积分变化</th>
+                        <th>兑换币变化</th>
+                        <th>原因</th>
+                    </tr>
+                </thead>
+                <tbody id="recordsList">
+                    <!-- 记录数据将通过JavaScript动态加载 -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <!-- 添加员工模态框 -->
+    <div class="modal" id="addEmployeeModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>添加员工</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="form-group">
+                <label>员工姓名:</label>
+                <input type="text" id="employeeName" placeholder="请输入员工姓名">
+            </div>
+            <button id="saveEmployeeBtn" class="btn-primary">保存</button>
+        </div>
+    </div>
+    
+    <!-- 添加规则模态框 -->
+    <div class="modal" id="addRuleModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>添加积分规则</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="form-group">
+                <label>规则描述:</label>
+                <input type="text" id="ruleDescription" placeholder="请输入规则描述">
+            </div>
+            <div class="form-group">
+                <label>积分值:</label>
+                <input type="number" id="rulePoints" min="1" value="10">
+            </div>
+            <button id="saveRuleBtn" class="btn-primary">保存</button>
+        </div>
+    </div>
+    
+    <!-- 添加奖品模态框 -->
+    <div class="modal" id="addRewardModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>添加奖品</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="form-group">
+                <label>奖品名称:</label>
+                <input type="text" id="rewardName" placeholder="请输入奖品名称">
+            </div>
+            <div class="form-group">
+                <label>所需兑换币:</label>
+                <input type="number" id="rewardCost" min="1" value="50">
+            </div>
+            <button id="saveRewardBtn" class="btn-primary">保存</button>
+        </div>
+    </div>
+    
+    <!-- 积分操作模态框 -->
+    <div class="modal" id="pointsModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="pointsModalTitle">积分操作</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="form-group">
+                <label>选择规则:</label>
+                <select id="pointsRuleSelect">
+                    <!-- 规则选项将通过JavaScript动态加载 -->
+                </select>
+            </div>
+            <div class="form-group">
+                <label>或自定义积分:</label>
+                <input type="number" id="customPoints" min="1" placeholder="自定义积分值">
+            </div>
+            <div class="form-group">
+                <label>原因:</label>
+                <input type="text" id="pointsReason" placeholder="请输入原因">
+            </div>
+            <button id="savePointsBtn" class="btn-primary">确认</button>
+        </div>
+    </div>
+    
+    <!-- 兑换奖品模态框 -->
+    <div class="modal" id="exchangeModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>兑换奖品</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="form-group">
+                <label>选择奖品:</label>
+                <select id="rewardSelect">
+                    <!-- 奖品选项将通过JavaScript动态加载 -->
+                </select>
+            </div>
+            <div id="exchangeInfo" class="form-group">
+                <!-- 兑换信息将通过JavaScript动态加载 -->
+            </div>
+            <button id="confirmExchangeBtn" class="btn-primary">确认兑换</button>
+        </div>
+    </div>
+    
+    <!-- 员工详情模态框 -->
+    <div class="modal" id="employeeDetailsModal">
+        <div class="modal-content" style="max-width: 700px;">
+            <div class="modal-header">
+                <h3 id="employeeDetailsTitle">员工详情</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div id="employeeDetailsContent">
+                <!-- 员工详情内容将通过JavaScript动态加载 -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 全局变量
+        let isAdmin = false;
+        let currentEmployeeId = null;
+        let employees = JSON.parse(localStorage.getItem('employees')) || [];
+        let rules = JSON.parse(localStorage.getItem('rules')) || [
+            { id: 1, description: "工作表现优秀", points: 10 },
+            { id: 2, description: "完成重要任务", points: 20 },
+            { id: 3, description: "提出建设性意见", points: 15 },
+            { id: 4, description: "团队协作突出", points: 10 },
+            { id: 5, description: "加班贡献", points: 5 }
+        ];
+        let rewards = JSON.parse(localStorage.getItem('rewards')) || [];
+        let pointRecords = JSON.parse(localStorage.getItem('pointRecords')) || [];
+        let exchangeRecords = JSON.parse(localStorage.getItem('exchangeRecords')) || [];
+        const adminPassword = "admin"; // 默认管理员密码
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            // 初始化数据
+            if (!localStorage.getItem('employees')) {
+                localStorage.setItem('employees', JSON.stringify(employees));
+            }
+            if (!localStorage.getItem('rules')) {
+                localStorage.setItem('rules', JSON.stringify(rules));
+            }
+            if (!localStorage.getItem('rewards')) {
+                localStorage.setItem('rewards', JSON.stringify(rewards));
+            }
+            if (!localStorage.getItem('pointRecords')) {
+                localStorage.setItem('pointRecords', JSON.stringify(pointRecords));
+            }
+            if (!localStorage.getItem('exchangeRecords')) {
+                localStorage.setItem('exchangeRecords', JSON.stringify(exchangeRecords));
+            }
+            
+            // 加载数据
+            loadEmployees();
+            loadRules();
+            loadRewards();
+            loadRanking();
+            loadBatchEmployees();
+            loadRecordFilters();
+            loadRecords();
+            
+            // 初始化日期选项
+            initDateOptions();
+            
+            // 事件监听
+            document.getElementById('loginBtn').addEventListener('click', login);
+            document.getElementById('viewModeBtn').addEventListener('click', viewMode);
+            
+            // 选项卡切换
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                    
+                    this.classList.add('active');
+                    document.getElementById(this.dataset.tab + '-tab').classList.add('active');
+                    
+                    // 特殊处理排行榜选项卡
+                    if (this.dataset.tab === 'ranking') {
+                        loadRanking();
+                    }
+                    
+                    // 特殊处理记录选项卡
+                    if (this.dataset.tab === 'records') {
+                        loadRecordFilters();
+                        loadRecords();
+                    }
+                });
+            });
+            
+            // 模态框关闭
+            document.querySelectorAll('.close-modal').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    this.closest('.modal').style.display = 'none';
+                });
+            });
+            
+            // 添加员工
+            document.getElementById('addEmployeeBtn').addEventListener('click', function() {
+                if (!isAdmin) {
+                    alert('查看模式下无法添加员工');
+                    return;
+                }
+                document.getElementById('addEmployeeModal').style.display = 'flex';
+            });
+            
+            document.getElementById('saveEmployeeBtn').addEventListener('click', addEmployee);
+            
+            // 删除员工
+            document.getElementById('deleteEmployeeBtn').addEventListener('click', deleteSelectedEmployees);
+            
+            // 添加规则
+            document.getElementById('addRuleBtn').addEventListener('click', function() {
+                if (!isAdmin) {
+                    alert('查看模式下无法添加规则');
+                    return;
+                }
+                document.getElementById('addRuleModal').style.display = 'flex';
+            });
+            
+            document.getElementById('saveRuleBtn').addEventListener('click', addRule);
+            
+            // 删除规则
+            document.getElementById('deleteRuleBtn').addEventListener('click', deleteSelectedRules);
+            
+            // 添加奖品
+            document.getElementById('addRewardBtn').addEventListener('click', function() {
+                if (!isAdmin) {
+                    alert('查看模式下无法添加奖品');
+                    return;
+                }
+                document.getElementById('addRewardModal').style.display = 'flex';
+            });
+            
+            document.getElementById('saveRewardBtn').addEventListener('click', addReward);
+            
+            // 删除奖品
+            document.getElementById('deleteRewardBtn').addEventListener('click', deleteSelectedRewards);
+            
+            // 批量操作
+            document.getElementById('executeBatchBtn').addEventListener('click', executeBatchOperation);
+            
+            // 排行榜筛选
+            document.getElementById('rankingType').addEventListener('change', loadRanking);
+            document.getElementById('rankingPeriod').addEventListener('change', function() {
+                const period = this.value;
+                document.getElementById('monthSelection').style.display = period === 'month' ? 'block' : 'none';
+                document.getElementById('quarterSelection').style.display = period === 'quarter' ? 'block' : 'none';
+                document.getElementById('yearSelection').style.display = period !== 'all' ? 'block' : 'none';
+                document.getElementById('customDateSelection').style.display = period === 'custom' ? 'block' : 'none';
+                loadRanking();
+            });
+            document.getElementById('rankingMonth').addEventListener('change', loadRanking);
+            document.getElementById('rankingQuarter').addEventListener('change', loadRanking);
+            document.getElementById('rankingYear').addEventListener('change', loadRanking);
+            document.getElementById('rankingStartDate').addEventListener('change', loadRanking);
+            document.getElementById('rankingEndDate').addEventListener('change', loadRanking);
+            
+            // 记录筛选
+            document.getElementById('recordEmployeeFilter').addEventListener('change', loadRecords);
+            document.getElementById('recordTypeFilter').addEventListener('change', loadRecords);
+            document.getElementById('recordTimeFilter').addEventListener('change', function() {
+                const period = this.value;
+                document.getElementById('recordCustomDate').style.display = period === 'custom' ? 'block' : 'none';
+                loadRecords();
+            });
+            document.getElementById('recordStartDate').addEventListener('change', loadRecords);
+            document.getElementById('recordEndDate').addEventListener('change', loadRecords);
+            
+            // 全选功能
+            document.getElementById('selectAllEmployees').addEventListener('change', function() {
+                const checkboxes = document.querySelectorAll('.employee-checkbox');
+                checkboxes.forEach(checkbox => {
+                    checkbox.checked = this.checked;
+                });
+            });
+            
+            document.getElementById('selectAllRules').addEventListener('change', function() {
+                const checkboxes = document.querySelectorAll('.rule-checkbox');
+                checkboxes.forEach(checkbox => {
+                    checkbox.checked = this.checked;
+                });
+            });
+            
+            document.getElementById('selectAllRewards').addEventListener('change', function() {
+                const checkboxes = document.querySelectorAll('.reward-checkbox');
+                checkboxes.forEach(checkbox => {
+                    checkbox.checked = this.checked;
+                });
+            });
+            
+            // 点击模态框外部关闭
+            window.addEventListener('click', function(event) {
+                if (event.target.classList.contains('modal')) {
+                    event.target.style.display = 'none';
+                }
+            });
+        });
+
+        // 初始化日期选项
+        function initDateOptions() {
+            // 初始化月份选项
+            const monthSelect = document.getElementById('rankingMonth');
+            const months = ['一月', '二月', '三月', '四月', '五月', '六月', 
+                           '七月', '八月', '九月', '十月', '十一月', '十二月'];
+            
+            months.forEach((month, index) => {
+                const option = document.createElement('option');
+                option.value = index + 1;
+                option.textContent = month;
+                monthSelect.appendChild(option);
+            });
+            
+            // 设置当前月份
+            const currentMonth = new Date().getMonth() + 1;
+            monthSelect.value = currentMonth;
+            
+            // 初始化年份选项
+            const yearSelect = document.getElementById('rankingYear');
+            const currentYear = new Date().getFullYear();
+            
+            for (let year = currentYear - 2; year <= currentYear + 2; year++) {
+                const option = document.createElement('option');
+                option.value = year;
+                option.textContent = year + '年';
+                yearSelect.appendChild(option);
+            }
+            
+            // 设置当前年份
+            yearSelect.value = currentYear;
+            
+            // 设置季度
+            const currentQuarter = Math.floor((currentMonth - 1) / 3) + 1;
+            document.getElementById('rankingQuarter').value = currentQuarter;
+            
+            // 初始化排行榜自定义日期
+            const today = new Date();
+            const oneMonthAgo = new Date(today.getTime() - 30 * 24 * 60 * 60 * 1000);
+            
+            document.getElementById('rankingStartDate').valueAsDate = oneMonthAgo;
+            document.getElementById('rankingEndDate').valueAsDate = today;
+            
+            // 初始化记录筛选日期
+            document.getElementById('recordStartDate').valueAsDate = oneMonthAgo;
+            document.getElementById('recordEndDate').valueAsDate = today;
+        }
+
+        // 登录功能
+        function login() {
+            const password = document.getElementById('adminPassword').value;
+            if (password === adminPassword) {
+                isAdmin = true;
+                document.getElementById('loginStatus').textContent = '管理员模式';
+                document.getElementById('loginStatus').style.color = 'green';
+                document.getElementById('viewOnlyAlert').style.display = 'none';
+                alert('登录成功！');
+                
+                // 重新加载数据以显示管理按钮
+                loadEmployees();
+                loadRules();
+                loadRewards();
+            } else {
+                alert('密码错误！');
+            }
+        }
+
+        // 查看模式
+        function viewMode() {
+            isAdmin = false;
+            document.getElementById('loginStatus').textContent = '查看模式';
+            document.getElementById('loginStatus').style.color = 'orange';
+            document.getElementById('viewOnlyAlert').style.display = 'block';
+            
+            // 重新加载数据以隐藏管理按钮
+            loadEmployees();
+            loadRules();
+            loadRewards();
+            
+            alert('已进入查看模式，您可以查看数据但无法修改');
+        }
+
+        // 加载员工列表
+        function loadEmployees() {
+            const employeesList = document.getElementById('employeesList');
+            employeesList.innerHTML = '';
+            
+            employees = JSON.parse(localStorage.getItem('employees')) || [];
+            
+            employees.forEach(employee => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td><input type="checkbox" class="employee-checkbox" value="${employee.id}"></td>
+                    <td>${employee.name}</td>
+                    <td>${employee.points || 0}</td>
+                    <td>${employee.coins || 0}</td>
+                    <td class="action-buttons">
+                        <button class="btn-primary action-btn view-details" data-id="${employee.id}">详情</button>
+                        <button class="btn-success action-btn add-points" data-id="${employee.id}">加分</button>
+                        <button class="btn-warning action-btn subtract-points" data-id="${employee.id}">减分</button>
+                        <button class="btn-primary action-btn exchange" data-id="${employee.id}">兑换</button>
+                        ${isAdmin ? `<button class="btn-danger action-btn delete-employee" data-id="${employee.id}">删除</button>` : ''}
+                    </td>
+                `;
+                employeesList.appendChild(row);
+            });
+            
+            // 添加事件监听
+            document.querySelectorAll('.view-details').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    showEmployeeDetails(parseInt(this.dataset.id));
+                });
+            });
+            
+            document.querySelectorAll('.add-points').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    if (!isAdmin) {
+                        alert('查看模式下无法修改积分');
+                        return;
+                    }
+                    showPointsModal(parseInt(this.dataset.id), 'add');
+                });
+            });
+            
+            document.querySelectorAll('.subtract-points').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    if (!isAdmin) {
+                        alert('查看模式下无法修改积分');
+                        return;
+                    }
+                    showPointsModal(parseInt(this.dataset.id), 'subtract');
+                });
+            });
+            
+            document.querySelectorAll('.exchange').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    showExchangeModal(parseInt(this.dataset.id));
+                });
+            });
+            
+            if (isAdmin) {
+                document.querySelectorAll('.delete-employee').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        deleteEmployee(parseInt(this.dataset.id));
+                    });
+                });
+            }
+            
+            // 更新全选状态
+            updateSelectAllCheckbox('employee');
+        }
+
+        // 添加员工
+        function addEmployee() {
+            const name = document.getElementById('employeeName').value.trim();
+            if (!name) {
+                alert('请输入员工姓名');
+                return;
+            }
+            
+            // 检查是否已存在同名员工
+            if (employees.some(emp => emp.name === name)) {
+                alert('该员工已存在');
+                return;
+            }
+            
+            const newId = employees.length > 0 ? Math.max(...employees.map(emp => emp.id)) + 1 : 1;
+            const newEmployee = {
+                id: newId,
+                name: name,
+                points: 0,
+                coins: 0
+            };
+            
+            employees.push(newEmployee);
+            localStorage.setItem('employees', JSON.stringify(employees));
+            
+            document.getElementById('addEmployeeModal').style.display = 'none';
+            document.getElementById('employeeName').value = '';
+            
+            loadEmployees();
+            loadBatchEmployees();
+            loadRecordFilters();
+            alert('员工添加成功！');
+        }
+
+        // 删除单个员工
+        function deleteEmployee(id) {
+            if (!confirm('确定要删除此员工吗？')) return;
+            
+            // 删除员工相关记录
+            pointRecords = pointRecords.filter(record => record.employeeId !== id);
+            exchangeRecords = exchangeRecords.filter(record => record.employeeId !== id);
+            
+            employees = employees.filter(emp => emp.id !== id);
+            localStorage.setItem('employees', JSON.stringify(employees));
+            localStorage.setItem('pointRecords', JSON.stringify(pointRecords));
+            localStorage.setItem('exchangeRecords', JSON.stringify(exchangeRecords));
+            
+            loadEmployees();
+            loadBatchEmployees();
+            loadRecordFilters();
+            alert('员工删除成功！');
+        }
+
+        // 删除选中的员工
+        function deleteSelectedEmployees() {
+            if (!isAdmin) {
+                alert('查看模式下无法删除员工');
+                return;
+            }
+            
+            const selectedEmployees = document.querySelectorAll('.employee-checkbox:checked');
+            if (selectedEmployees.length === 0) {
+                alert('请选择要删除的员工');
+                return;
+            }
+            
+            if (!confirm(`确定要删除选中的 ${selectedEmployees.length} 名员工吗？`)) return;
+            
+            selectedEmployees.forEach(checkbox => {
+                const employeeId = parseInt(checkbox.value);
+                
+                // 删除员工相关记录
+                pointRecords = pointRecords.filter(record => record.employeeId !== employeeId);
+                exchangeRecords = exchangeRecords.filter(record => record.employeeId !== employeeId);
+                
+                employees = employees.filter(emp => emp.id !== employeeId);
+            });
+            
+            localStorage.setItem('employees', JSON.stringify(employees));
+            localStorage.setItem('pointRecords', JSON.stringify(pointRecords));
+            localStorage.setItem('exchangeRecords', JSON.stringify(exchangeRecords));
+            
+            loadEmployees();
+            loadBatchEmployees();
+            loadRecordFilters();
+            alert('员工删除成功！');
+        }
+
+        // 显示积分操作模态框
+        function showPointsModal(employeeId, operation) {
+            currentEmployeeId = employeeId;
+            const employee = employees.find(emp => emp.id === employeeId);
+            
+            document.getElementById('pointsModalTitle').textContent = 
+                operation === 'add' ? `为 ${employee.name} 加分` : `为 ${employee.name} 减分`;
+            
+            // 加载规则选项
+            const ruleSelect = document.getElementById('pointsRuleSelect');
+            ruleSelect.innerHTML = '<option value="">-- 选择规则 --</option>';
+            
+            rules.forEach(rule => {
+                const option = document.createElement('option');
+                option.value = rule.id;
+                option.textContent = `${rule.description} (${operation === 'add' ? '+' : '-'}${rule.points}分)`;
+                ruleSelect.appendChild(option);
+            });
+            
+            document.getElementById('customPoints').value = '';
+            document.getElementById('pointsReason').value = '';
+            
+            document.getElementById('pointsModal').style.display = 'flex';
+            
+            // 保存积分操作
+            document.getElementById('savePointsBtn').onclick = function() {
+                savePoints(operation);
+            };
+        }
+
+        // 保存积分操作
+        function savePoints(operation) {
+            const ruleId = document.getElementById('pointsRuleSelect').value;
+            const customPoints = document.getElementById('customPoints').value;
+            const reason = document.getElementById('pointsReason').value.trim();
+            
+            let points = 0;
+            
+            if (ruleId) {
+                const rule = rules.find(r => r.id === parseInt(ruleId));
+                points = rule.points;
+                if (!reason) {
+                    document.getElementById('pointsReason').value = rule.description;
+                }
+            } else if (customPoints) {
+                points = parseInt(customPoints);
+                if (!reason) {
+                    alert('请填写原因');
+                    return;
+                }
+            } else {
+                alert('请选择规则或输入自定义积分值');
+                return;
+            }
+            
+            if (operation === 'subtract') {
+                points = -points;
+                
+                // 检查积分是否足够
+                const employee = employees.find(emp => emp.id === currentEmployeeId);
+                if (employee.points + points < 0) {
+                    alert('积分不足，无法执行减分操作');
+                    return;
+                }
+            }
+            
+            // 更新员工积分和兑换币
+            employees = employees.map(emp => {
+                if (emp.id === currentEmployeeId) {
+                    return {
+                        ...emp,
+                        points: emp.points + points,
+                        coins: emp.coins + points // 积分和兑换币1:1转换
+                    };
+                }
+                return emp;
+            });
+            
+            // 记录积分变化
+            const record = {
+                id: pointRecords.length > 0 ? Math.max(...pointRecords.map(r => r.id)) + 1 : 1,
+                employeeId: currentEmployeeId,
+                pointsChange: points,
+                coinsChange: points,
+                reason: reason || document.getElementById('pointsRuleSelect').options[document.getElementById('pointsRuleSelect').selectedIndex].text.split(' (')[0],
+                date: new Date().toISOString()
+            };
+            
+            pointRecords.push(record);
+            
+            // 保存到本地存储
+            localStorage.setItem('employees', JSON.stringify(employees));
+            localStorage.setItem('pointRecords', JSON.stringify(pointRecords));
+            
+            document.getElementById('pointsModal').style.display = 'none';
+            
+            loadEmployees();
+            loadRanking();
+            loadBatchEmployees();
+            
+            alert(`积分${operation === 'add' ? '增加' : '减少'}成功！`);
+        }
+
+        // 显示兑换模态框
+        function showExchangeModal(employeeId) {
+            currentEmployeeId = employeeId;
+            const employee = employees.find(emp => emp.id === employeeId);
+            
+            // 加载奖品选项
+            const rewardSelect = document.getElementById('rewardSelect');
+            rewardSelect.innerHTML = '<option value="">-- 选择奖品 --</option>';
+            
+            rewards.forEach(reward => {
+                const option = document.createElement('option');
+                option.value = reward.id;
+                option.textContent = `${reward.name} (${reward.cost}兑换币)`;
+                rewardSelect.appendChild(option);
+            });
+            
+            document.getElementById('exchangeInfo').innerHTML = `
+                <p>当前兑换币: <strong>${employee.coins || 0}</strong></p>
+            `;
+            
+            document.getElementById('exchangeModal').style.display = 'flex';
+            
+            // 奖品选择变化事件
+            rewardSelect.addEventListener('change', function() {
+                const selectedRewardId = this.value;
+                if (selectedRewardId) {
+                    const reward = rewards.find(r => r.id === parseInt(selectedRewardId));
+                    document.getElementById('exchangeInfo').innerHTML = `
+                        <p>当前兑换币: <strong>${employee.coins || 0}</strong></p>
+                        <p>所需兑换币: <strong>${reward.cost}</strong></p>
+                        <p>兑换后剩余: <strong>${employee.coins - reward.cost}</strong></p>
+                        <p>注意: 兑换奖品只会扣除兑换币，积分保持不变</p>
+                    `;
+                } else {
+                    document.getElementById('exchangeInfo').innerHTML = `
+                        <p>当前兑换币: <strong>${employee.coins || 0}</strong></p>
+                    `;
+                }
+            });
+            
+            // 确认兑换
+            document.getElementById('confirmExchangeBtn').onclick = confirmExchange;
+        }
+
+        // 确认兑换
+        function confirmExchange() {
+            const rewardId = document.getElementById('rewardSelect').value;
+            if (!rewardId) {
+                alert('请选择奖品');
+                return;
+            }
+            
+            const employee = employees.find(emp => emp.id === currentEmployeeId);
+            const reward = rewards.find(r => r.id === parseInt(rewardId));
+            
+            if (employee.coins < reward.cost) {
+                alert('兑换币不足，无法兑换此奖品');
+                return;
+            }
+            
+            if (!confirm(`确定要用 ${reward.cost} 兑换币兑换 ${reward.name} 吗？`)) return;
+            
+            // 更新员工兑换币（积分保持不变）
+            employees = employees.map(emp => {
+                if (emp.id === currentEmployeeId) {
+                    return {
+                        ...emp,
+                        coins: emp.coins - reward.cost
+                        // 积分保持不变
+                    };
+                }
+                return emp;
+            });
+            
+            // 记录兑换记录
+            const record = {
+                id: exchangeRecords.length > 0 ? Math.max(...exchangeRecords.map(r => r.id)) + 1 : 1,
+                employeeId: currentEmployeeId,
+                rewardId: reward.id,
+                date: new Date().toISOString()
+            };
+            
+            exchangeRecords.push(record);
+            
+            // 记录兑换币变化
+            const coinsRecord = {
+                id: pointRecords.length > 0 ? Math.max(...pointRecords.map(r => r.id)) + 1 : 1,
+                employeeId: currentEmployeeId,
+                pointsChange: 0,
+                coinsChange: -reward.cost,
+                reason: `兑换奖品: ${reward.name}`,
+                date: new Date().toISOString()
+            };
+            
+            pointRecords.push(coinsRecord);
+            
+            // 保存到本地存储
+            localStorage.setItem('employees', JSON.stringify(employees));
+            localStorage.setItem('exchangeRecords', JSON.stringify(exchangeRecords));
+            localStorage.setItem('pointRecords', JSON.stringify(pointRecords));
+            
+            document.getElementById('exchangeModal').style.display = 'none';
+            
+            loadEmployees();
+            loadRanking();
+            loadBatchEmployees();
+            
+            alert('兑换成功！');
+        }
+
+        // 显示员工详情
+        function showEmployeeDetails(employeeId) {
+            const employee = employees.find(emp => emp.id === employeeId);
+            const employeePointRecords = pointRecords.filter(record => record.employeeId === employeeId);
+            const employeeExchangeRecords = exchangeRecords.filter(record => record.employeeId === employeeId);
+            
+            document.getElementById('employeeDetailsTitle').textContent = `${employee.name} 的详情`;
+            
+            let detailsHTML = `
+                <div style="margin-bottom: 20px;">
+                    <p><strong>姓名:</strong> ${employee.name}</p>
+                    <p><strong>积分:</strong> ${employee.points || 0}</p>
+                    <p><strong>兑换币:</strong> ${employee.coins || 0}</p>
+                </div>
+                
+                <h4>积分记录</h4>
+                <table style="width: 100%; margin-bottom: 20px;">
+                    <thead>
+                        <tr>
+                            <th>时间</th>
+                            <th>积分变化</th>
+                            <th>兑换币变化</th>
+                            <th>原因</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+            
+            if (employeePointRecords.length === 0) {
+                detailsHTML += `<tr><td colspan="4" style="text-align: center;">暂无积分记录</td></tr>`;
+            } else {
+                employeePointRecords.forEach(record => {
+                    const pointsChange = record.pointsChange;
+                    const coinsChange = record.coinsChange;
+                    const pointsClass = pointsChange > 0 ? 'badge-success' : (pointsChange < 0 ? 'badge-danger' : '');
+                    const coinsClass = coinsChange > 0 ? 'badge-success' : (coinsChange < 0 ? 'badge-danger' : '');
+                    
+                    detailsHTML += `
+                        <tr>
+                            <td>${new Date(record.date).toLocaleString()}</td>
+                            <td><span class="badge ${pointsClass}">${pointsChange > 0 ? '+' : ''}${pointsChange}</span></td>
+                            <td><span class="badge ${coinsClass}">${coinsChange > 0 ? '+' : ''}${coinsChange}</span></td>
+                            <td>${record.reason}</td>
+                        </tr>
+                    `;
+                });
+            }
+            
+            detailsHTML += `
+                    </tbody>
+                </table>
+                
+                <h4>兑换记录</h4>
+                <table style="width: 100%;">
+                    <thead>
+                        <tr>
+                            <th>时间</th>
+                            <th>奖品</th>
+                            <th>消耗兑换币</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+            
+            if (employeeExchangeRecords.length === 0) {
+                detailsHTML += `<tr><td colspan="3" style="text-align: center;">暂无兑换记录</td></tr>`;
+            } else {
+                employeeExchangeRecords.forEach(record => {
+                    const reward = rewards.find(r => r.id === record.rewardId);
+                    detailsHTML += `
+                        <tr>
+                            <td>${new Date(record.date).toLocaleString()}</td>
+                            <td>${reward ? reward.name : '未知奖品'}</td>
+                            <td><span class="badge badge-warning">-${reward ? reward.cost : 0}</span></td>
+                        </tr>
+                    `;
+                });
+            }
+            
+            detailsHTML += `
+                    </tbody>
+                </table>
+            `;
+            
+            document.getElementById('employeeDetailsContent').innerHTML = detailsHTML;
+            document.getElementById('employeeDetailsModal').style.display = 'flex';
+        }
+
+        // 加载规则列表
+        function loadRules() {
+            const rulesList = document.getElementById('rulesList');
+            rulesList.innerHTML = '';
+            
+            rules = JSON.parse(localStorage.getItem('rules')) || [];
+            
+            rules.forEach(rule => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td><input type="checkbox" class="rule-checkbox" value="${rule.id}"></td>
+                    <td>${rule.description}</td>
+                    <td>${rule.points}</td>
+                `;
+                rulesList.appendChild(row);
+            });
+            
+            // 更新全选状态
+            updateSelectAllCheckbox('rule');
+        }
+
+        // 添加规则
+        function addRule() {
+            const description = document.getElementById('ruleDescription').value.trim();
+            const points = parseInt(document.getElementById('rulePoints').value);
+            
+            if (!description) {
+                alert('请输入规则描述');
+                return;
+            }
+            
+            if (!points || points <= 0) {
+                alert('请输入有效的积分值');
+                return;
+            }
+            
+            const newId = rules.length > 0 ? Math.max(...rules.map(rule => rule.id)) + 1 : 1;
+            const newRule = {
+                id: newId,
+                description: description,
+                points: points
+            };
+            
+            rules.push(newRule);
+            localStorage.setItem('rules', JSON.stringify(rules));
+            
+            document.getElementById('addRuleModal').style.display = 'none';
+            document.getElementById('ruleDescription').value = '';
+            document.getElementById('rulePoints').value = '10';
+            
+            loadRules();
+            alert('规则添加成功！');
+        }
+
+        // 删除选中的规则
+        function deleteSelectedRules() {
+            if (!isAdmin) {
+                alert('查看模式下无法删除规则');
+                return;
+            }
+            
+            const selectedRules = document.querySelectorAll('.rule-checkbox:checked');
+            if (selectedRules.length === 0) {
+                alert('请选择要删除的规则');
+                return;
+            }
+            
+            if (!confirm(`确定要删除选中的 ${selectedRules.length} 条规则吗？`)) return;
+            
+            selectedRules.forEach(checkbox => {
+                const ruleId = parseInt(checkbox.value);
+                rules = rules.filter(rule => rule.id !== ruleId);
+            });
+            
+            localStorage.setItem('rules', JSON.stringify(rules));
+            
+            loadRules();
+            alert('规则删除成功！');
+        }
+
+        // 加载奖品列表
+        function loadRewards() {
+            const rewardsList = document.getElementById('rewardsList');
+            rewardsList.innerHTML = '';
+            
+            rewards = JSON.parse(localStorage.getItem('rewards')) || [];
+            
+            rewards.forEach(reward => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td><input type="checkbox" class="reward-checkbox" value="${reward.id}"></td>
+                    <td>${reward.name}</td>
+                    <td>${reward.cost}</td>
+                `;
+                rewardsList.appendChild(row);
+            });
+            
+            // 更新全选状态
+            updateSelectAllCheckbox('reward');
+        }
+
+        // 添加奖品
+        function addReward() {
+            const name = document.getElementById('rewardName').value.trim();
+            const cost = parseInt(document.getElementById('rewardCost').value);
+            
+            if (!name) {
+                alert('请输入奖品名称');
+                return;
+            }
+            
+            if (!cost || cost <= 0) {
+                alert('请输入有效的兑换币数量');
+                return;
+            }
+            
+            const newId = rewards.length > 0 ? Math.max(...rewards.map(reward => reward.id)) + 1 : 1;
+            const newReward = {
+                id: newId,
+                name: name,
+                cost: cost
+            };
+            
+            rewards.push(newReward);
+            localStorage.setItem('rewards', JSON.stringify(rewards));
+            
+            document.getElementById('addRewardModal').style.display = 'none';
+            document.getElementById('rewardName').value = '';
+            document.getElementById('rewardCost').value = '50';
+            
+            loadRewards();
+            alert('奖品添加成功！');
+        }
+
+        // 删除选中的奖品
+        function deleteSelectedRewards() {
+            if (!isAdmin) {
+                alert('查看模式下无法删除奖品');
+                return;
+            }
+            
+            const selectedRewards = document.querySelectorAll('.reward-checkbox:checked');
+            if (selectedRewards.length === 0) {
+                alert('请选择要删除的奖品');
+                return;
+            }
+            
+            if (!confirm(`确定要删除选中的 ${selectedRewards.length} 个奖品吗？`)) return;
+            
+            selectedRewards.forEach(checkbox => {
+                const rewardId = parseInt(checkbox.value);
+                rewards = rewards.filter(reward => reward.id !== rewardId);
+            });
+            
+            localStorage.setItem('rewards', JSON.stringify(rewards));
+            
+            loadRewards();
+            alert('奖品删除成功！');
+        }
+
+        // 加载排行榜
+        function loadRanking() {
+            const rankingList = document.getElementById('rankingList');
+            rankingList.innerHTML = '';
+            
+            const rankingType = document.getElementById('rankingType').value;
+            const rankingPeriod = document.getElementById('rankingPeriod').value;
+            const rankingMonth = parseInt(document.getElementById('rankingMonth').value);
+            const rankingQuarter = parseInt(document.getElementById('rankingQuarter').value);
+            const rankingYear = parseInt(document.getElementById('rankingYear').value);
+            const rankingStartDate = document.getElementById('rankingStartDate').value;
+            const rankingEndDate = document.getElementById('rankingEndDate').value;
+            
+            let periodInfo = "显示全部时间的排名";
+            
+            // 根据时间范围筛选数据
+            let filteredRecords = [...pointRecords];
+            
+            if (rankingPeriod !== 'all') {
+                let startDate, endDate;
+                
+                if (rankingPeriod === 'month') {
+                    startDate = new Date(rankingYear, rankingMonth - 1, 1);
+                    endDate = new Date(rankingYear, rankingMonth, 0, 23, 59, 59);
+                    periodInfo = `显示 ${rankingYear}年${rankingMonth}月的排名`;
+                } else if (rankingPeriod === 'quarter') {
+                    const quarterStartMonth = (rankingQuarter - 1) * 3;
+                    startDate = new Date(rankingYear, quarterStartMonth, 1);
+                    endDate = new Date(rankingYear, quarterStartMonth + 3, 0, 23, 59, 59);
+                    periodInfo = `显示 ${rankingYear}年第${rankingQuarter}季度的排名`;
+                } else if (rankingPeriod === 'custom') {
+                    startDate = new Date(rankingStartDate);
+                    endDate = new Date(rankingEndDate);
+                    endDate.setHours(23, 59, 59, 999);
+                    periodInfo = `显示 ${rankingStartDate} 至 ${rankingEndDate} 的排名`;
+                }
+                
+                filteredRecords = pointRecords.filter(record => {
+                    const recordDate = new Date(record.date);
+                    return recordDate >= startDate && recordDate <= endDate;
+                });
+            }
+            
+            document.getElementById('periodInfo').textContent = periodInfo;
+            
+            // 计算每个员工在时间段内的积分和兑换币变化
+            const employeeStats = {};
+            
+            employees.forEach(employee => {
+                employeeStats[employee.id] = {
+                    points: 0,
+                    coins: 0,
+                    name: employee.name
+                };
+            });
+            
+            filteredRecords.forEach(record => {
+                if (employeeStats[record.employeeId]) {
+                    employeeStats[record.employeeId].points += record.pointsChange;
+                    employeeStats[record.employeeId].coins += record.coinsChange;
+                }
+            });
+            
+            // 转换为数组并排序
+            let sortedEmployees = Object.values(employeeStats).map(stat => ({
+                name: stat.name,
+                points: stat.points,
+                coins: stat.coins
+            }));
+            
+            // 排序
+            sortedEmployees.sort((a, b) => {
+                if (rankingType === 'points') {
+                    return (b.points || 0) - (a.points || 0);
+                } else {
+                    return (b.coins || 0) - (a.coins || 0);
+                }
+            });
+            
+            // 显示排名
+            sortedEmployees.forEach((employee, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td>${employee.name}</td>
+                    <td>${employee.points || 0}</td>
+                    <td>${employee.coins || 0}</td>
+                `;
+                rankingList.appendChild(row);
+            });
+        }
+
+        // 加载批量操作员工列表
+        function loadBatchEmployees() {
+            const batchEmployeeList = document.getElementById('batchEmployeeList');
+            batchEmployeeList.innerHTML = '';
+            
+            employees.forEach(employee => {
+                const div = document.createElement('div');
+                div.innerHTML = `
+                    <label>
+                        <input type="checkbox" class="batch-employee" value="${employee.id}">
+                        ${employee.name} (积分: ${employee.points || 0}, 兑换币: ${employee.coins || 0})
+                    </label>
+                `;
+                batchEmployeeList.appendChild(div);
+            });
+        }
+
+        // 执行批量操作
+        function executeBatchOperation() {
+            if (!isAdmin) {
+                alert('查看模式下无法执行批量操作');
+                return;
+            }
+            
+            const selectedEmployees = document.querySelectorAll('.batch-employee:checked');
+            if (selectedEmployees.length === 0) {
+                alert('请选择至少一名员工');
+                return;
+            }
+            
+            const operationType = document.getElementById('batchOperationType').value;
+            const points = parseInt(document.getElementById('batchPoints').value);
+            const reason = document.getElementById('batchReason').value.trim();
+            
+            if (!points || points <= 0) {
+                alert('请输入有效的积分值');
+                return;
+            }
+            
+            if (!reason) {
+                alert('请输入操作原因');
+                return;
+            }
+            
+            if (!confirm(`确定要为 ${selectedEmployees.length} 名员工执行${operationType === 'add' ? '加分' : '减分'}操作吗？`)) {
+                return;
+            }
+            
+            const pointsChange = operationType === 'add' ? points : -points;
+            const currentTime = new Date().toISOString();
+            
+            selectedEmployees.forEach(checkbox => {
+                const employeeId = parseInt(checkbox.value);
+                const employee = employees.find(emp => emp.id === employeeId);
+                
+                // 检查减分是否会导致负分
+                if (operationType === 'subtract' && (employee.points || 0) < points) {
+                    alert(`员工 ${employee.name} 的积分不足，无法减去 ${points} 分`);
+                    return;
+                }
+                
+                // 更新员工积分和兑换币
+                employees = employees.map(emp => {
+                    if (emp.id === employeeId) {
+                        return {
+                            ...emp,
+                            points: emp.points + pointsChange,
+                            coins: emp.coins + pointsChange
+                        };
+                    }
+                    return emp;
+                });
+                
+                // 记录积分变化
+                const record = {
+                    id: pointRecords.length > 0 ? Math.max(...pointRecords.map(r => r.id)) + 1 : 1,
+                    employeeId: employeeId,
+                    pointsChange: pointsChange,
+                    coinsChange: pointsChange,
+                    reason: reason,
+                    date: currentTime
+                };
+                
+                pointRecords.push(record);
+            });
+            
+            // 保存到本地存储
+            localStorage.setItem('employees', JSON.stringify(employees));
+            localStorage.setItem('pointRecords', JSON.stringify(pointRecords));
+            
+            document.getElementById('batchPoints').value = '10';
+            document.getElementById('batchReason').value = '';
+            
+            // 取消所有选择
+            document.querySelectorAll('.batch-employee').forEach(checkbox => {
+                checkbox.checked = false;
+            });
+            
+            loadEmployees();
+            loadRanking();
+            loadBatchEmployees();
+            
+            alert(`批量${operationType === 'add' ? '加分' : '减分'}操作成功！`);
+        }
+
+        // 加载记录筛选选项
+        function loadRecordFilters() {
+            const employeeFilter = document.getElementById('recordEmployeeFilter');
+            employeeFilter.innerHTML = '<option value="">全部员工</option>';
+            
+            employees.forEach(employee => {
+                const option = document.createElement('option');
+                option.value = employee.id;
+                option.textContent = employee.name;
+                employeeFilter.appendChild(option);
+            });
+        }
+
+        // 加载积分记录
+        function loadRecords() {
+            const recordsList = document.getElementById('recordsList');
+            recordsList.innerHTML = '';
+            
+            const employeeFilter = document.getElementById('recordEmployeeFilter').value;
+            const typeFilter = document.getElementById('recordTypeFilter').value;
+            const timeFilter = document.getElementById('recordTimeFilter').value;
+            const startDate = document.getElementById('recordStartDate').value;
+            const endDate = document.getElementById('recordEndDate').value;
+            
+            let filteredRecords = [...pointRecords];
+            let periodInfo = "显示全部时间的记录";
+            
+            // 应用筛选
+            if (employeeFilter) {
+                filteredRecords = filteredRecords.filter(record => record.employeeId == employeeFilter);
+            }
+            
+            if (typeFilter) {
+                if (typeFilter === 'add') {
+                    filteredRecords = filteredRecords.filter(record => record.pointsChange > 0);
+                } else if (typeFilter === 'subtract') {
+                    filteredRecords = filteredRecords.filter(record => record.pointsChange < 0);
+                } else if (typeFilter === 'exchange') {
+                    filteredRecords = filteredRecords.filter(record => record.coinsChange < 0 && record.pointsChange === 0);
+                }
+            }
+            
+            if (timeFilter !== 'all') {
+                const now = new Date();
+                let startTime, endTime = new Date(now.getTime() + 24 * 60 * 60 * 1000); // 包含今天
+                
+                if (timeFilter === 'today') {
+                    startTime = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+                    periodInfo = "显示今天的记录";
+                } else if (timeFilter === 'week') {
+                    startTime = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+                    periodInfo = "显示最近一周的记录";
+                } else if (timeFilter === 'month') {
+                    startTime = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+                    periodInfo = "显示最近一个月的记录";
+                } else if (timeFilter === 'quarter') {
+                    startTime = new Date(now.getTime() - 90 * 24 * 60 * 60 * 1000);
+                    periodInfo = "显示最近一个季度的记录";
+                } else if (timeFilter === 'year') {
+                    startTime = new Date(now.getFullYear(), 0, 1);
+                    periodInfo = `显示${now.getFullYear()}年的记录`;
+                } else if (timeFilter === 'custom') {
+                    startTime = new Date(startDate);
+                    endTime = new Date(endDate);
+                    endTime.setHours(23, 59, 59, 999);
+                    periodInfo = `显示 ${startDate} 至 ${endDate} 的记录`;
+                }
+                
+                filteredRecords = filteredRecords.filter(record => {
+                    const recordDate = new Date(record.date);
+                    return recordDate >= startTime && recordDate <= endTime;
+                });
+            }
+            
+            document.getElementById('recordPeriodInfo').textContent = periodInfo;
+            
+            // 按时间倒序排列
+            filteredRecords.sort((a, b) => new Date(b.date) - new Date(a.date));
+            
+            // 显示记录
+            if (filteredRecords.length === 0) {
+                recordsList.innerHTML = '<tr><td colspan="5" style="text-align: center;">暂无记录</td></tr>';
+                return;
+            }
+            
+            filteredRecords.forEach(record => {
+                const employee = employees.find(emp => emp.id === record.employeeId);
+                if (!employee) return;
+                
+                const pointsChange = record.pointsChange;
+                const coinsChange = record.coinsChange;
+                const pointsClass = pointsChange > 0 ? 'badge-success' : (pointsChange < 0 ? 'badge-danger' : '');
+                const coinsClass = coinsChange > 0 ? 'badge-success' : (coinsChange < 0 ? 'badge-danger' : '');
+                
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${new Date(record.date).toLocaleString()}</td>
+                    <td>${employee.name}</td>
+                    <td><span class="badge ${pointsClass}">${pointsChange > 0 ? '+' : ''}${pointsChange}</span></td>
+                    <td><span class="badge ${coinsClass}">${coinsChange > 0 ? '+' : ''}${coinsChange}</span></td>
+                    <td>${record.reason}</td>
+                `;
+                recordsList.appendChild(row);
+            });
+        }
+
+        // 更新全选复选框状态
+        function updateSelectAllCheckbox(type) {
+            const checkboxes = document.querySelectorAll(`.${type}-checkbox`);
+            const selectAll = document.getElementById(`selectAll${type.charAt(0).toUpperCase() + type.slice(1)}s`);
+            
+            if (checkboxes.length === 0) {
+                selectAll.checked = false;
+                selectAll.disabled = true;
+            } else {
+                selectAll.disabled = false;
+                const allChecked = Array.from(checkboxes).every(checkbox => checkbox.checked);
+                selectAll.checked = allChecked;
+            }
+        }
+    </script>
+</body>
+</html>
